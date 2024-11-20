@@ -18,18 +18,16 @@ public class NotificationConsumerService {
     @KafkaListener(topics = CUSTOMER_NOTIFICATION, groupId = CUSTOMER_NOTIFICATION_GROUP)
     public void cancelSubscription(Message<UtilityBillDto> utilityBill) {
 
-        String subscriptionProvider = utilityBill.getPayload().subscriptionProvider().name();
-        String subscription = utilityBill.getPayload().subscriptionProvider().description();
-        LocalDateTime date = utilityBill.getPayload().date();
-        BigDecimal amount = utilityBill.getPayload().Amount();
-        String customer = utilityBill.getPayload().customer().firstName() + " " + utilityBill.getPayload().customer().lastName();
-        String email = utilityBill.getPayload().customer().email();
+        String subscriptionProvider = utilityBill.getPayload().getSubscriptionProvider().name();
+        String subscription = utilityBill.getPayload().getSubscriptionProvider().description();
+        LocalDateTime date = utilityBill.getPayload().getDate();
+        BigDecimal amount = utilityBill.getPayload().getAmount();
+        String customer = utilityBill.getPayload().getCustomer().firstName() + " " + utilityBill.getPayload().getCustomer().lastName();
+        String email = utilityBill.getPayload().getCustomer().email();
 
-        System.out.println(String.format(
-                "Received a bill for subscription={%s} from provider={%s} for {%s} EUR. Sending email to {%s - %s}. " +
-                        "Please find the bill attached below:"
-                , subscription, subscriptionProvider, amount, customer, email)
-        );
+        System.out.println(String.format("Received a bill for subscription={%s} from provider={%s} for {%s} EUR. " +
+                                        "Sending email to {%s - %s}. " + "Please find the bill attached below:",
+                                        subscription, subscriptionProvider, amount, customer, email));
 
         System.out.println("|-----------NEW_BILL_ISSUED!-----------|");
         System.out.println("|Date: " + date.format(DateTimeFormatter.ISO_DATE) + " " + date.format(DateTimeFormatter.ISO_TIME));
